@@ -1,8 +1,11 @@
 package spring.example.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,17 +21,23 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 
 @Configuration
 @EnableWebSecurity
+@ComponentScan(basePackages = { "spring.example.*" })
+@PropertySource("classpath:user.properties")
 public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
-	private static final String ADMIN_NAME = "bill";
-	private static final String ADMIN_PASSWORD = "abc123";
-	private static final String ADMIN_ROLE = "ADMIN";
+	@Value("${user.id:user}")
+	private String userId;
+	@Value("${user.password:userpsw}")
+	private String userPassword;
+	@Value("${admin.id:admin}")
+	private String adminId;
+	@Value("${admin.password:adminpsw}")
+	private String adminPassword;
 	
-	private static final String USER_NAME = "user";
-	private static final String USER_PASSWORD = "abc123";
+	private static final String ADMIN_ROLE = "ADMIN";
 	private static final String USER_ROLE = "USER";
 	
-	private static final String OAUTH_TOKEN_ENDPOINT = "/oauth/token";
+	private static final String OAUTH_TOKEN_ENDPOINT = "*";
 
 	@Autowired
 	private ClientDetailsService clientDetailsService;
@@ -36,8 +45,8 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
     public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-        .withUser(ADMIN_NAME).password(ADMIN_PASSWORD).roles(ADMIN_ROLE).and()
-        .withUser(USER_NAME).password(USER_PASSWORD).roles(USER_ROLE);
+        .withUser(adminId).password(adminPassword).roles(ADMIN_ROLE).and()
+        .withUser(userId).password(userPassword).roles(USER_ROLE);
     }
 
     @Override
