@@ -10,32 +10,53 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 
 @Configuration
 @EnableAuthorizationServer 
 @ComponentScan(basePackages = { "spring.example.*" })
 @PropertySource("classpath:client.properties")
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
+
+	private static String REALM="MY_OAUTH_REALM";
+
+	@Autowired
+	private TokenStore tokenStore;
 	
-@Value("${client.id:client}")
-private String clientId;
-@Value("${client.secret:secret}")
-private String clientSecret;
+	@Autowired
+	private UserApprovalHandler userApprovalHandler;
 
-  @Autowired
-  private AuthenticationManager authenticationManager;
-  
-  @Override
-  public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-    endpoints.authenticationManager(authenticationManager);
-  }
+	@Value("${client.id:client}")
+	private String clientId;
+	@Value("${client.secret:secret}")
+	private String clientSecret;
 
-@Override
-  public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-    clients.inMemory()
-        .withClient(clientId)
-        .secret(clientSecret)
-        .authorizedGrantTypes("authorization_code", "refresh_token").scopes("openid");
-  }
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+
+	@Override
+	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+		clients.inMemory()
+		.withClient(clientId)
+		.secret(clientSecret)
+		.authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
+		.authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
+		.scopes("read", "write", "trust")
+		;
+	}
+
+	@Override
+	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+		endpoints.tokenStore(tokenStore).userApprovalHandler(userApprovalHandler)
+		.authenticationManager(authenticationManager);
+	}
+
+	@Override
+	public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+		oauthServer.realm(REALM+"/client");
+	}
 
 }
