@@ -37,8 +37,6 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String ADMIN_ROLE = "ADMIN";
 	private static final String USER_ROLE = "USER";
 	
-	private static final String OAUTH_TOKEN_ENDPOINT = "*";
-
 	@Autowired
 	private ClientDetailsService clientDetailsService;
 	
@@ -51,11 +49,10 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-		http
-		.csrf().disable()
-		.anonymous().disable()
-	  	.authorizeRequests()
-	  	.antMatchers(OAUTH_TOKEN_ENDPOINT).permitAll();
+    	http.authorizeRequests()
+        .anyRequest().authenticated()
+        .and().formLogin()
+        .loginPage("/login").permitAll();
     }
 
     @Override

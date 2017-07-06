@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static java.lang.System.out;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -76,6 +77,18 @@ public class OAuthTest {
         
         JacksonJsonParser jsonParser = new JacksonJsonParser();
         assertEquals("Hello, Roberto!", jsonParser.parseMap(resultString).get("content").toString());
+    }
+    
+    @Test
+    public void test() throws Exception {
+     
+        ResultActions result 
+        = mockMvc.perform(get("/oauth/authorize")
+          .param("client_id", "client")
+          .param("response_type", "code")
+          .param("redirect_uri", "http%3A//localhost%3A8080/rest-service-with-oauth/greeting")
+          .with(httpBasic("client","boh")));
+		System.out.println(result.andReturn().getResponse().getHeaderNames());
     }
     
     private String obtainAccessToken(String username, String password) throws Exception {
