@@ -44,7 +44,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		.secret(clientSecret)
 		.authorizedGrantTypes("bearer", "password", "authorization_code", "refresh_token", "implicit")
 		.authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
-		.redirectUris("http://localhost:8080/rest-service-with-oauth/decision")
+		.redirectUris("http://localhost:8080/rest-service-with-oauth/callback")
 		.scopes("read", "write", "trust");
 	}
 

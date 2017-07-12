@@ -37,7 +37,7 @@ http://localhost:9000/hascode/oauth/authorize?client_id=foo&response_type=code&r
 Follow the stream and once you get the authorization code invoke the following POST
 
 ```
-curl -u "foo:foosecret" \
+$ curl -u "foo:foosecret" \
    -X POST 'http://localhost:9000/hascode/oauth/token?grant_type=authorization_code&code=TQ2p9f&redirect_uri=http%3A//localhost%3A8080/client-app/callback'
 
 ----
@@ -60,28 +60,134 @@ Client and users could be managed in the configuration files: ```client.properti
 
 ```GreetingController``` is the secured REST service.
 
+```CallbackController``` exposes a webservice used as callback in _authorization___code flow_ in order to retrieve the authorization code required to obtain the token.
+
 ```ResourceServerConfiguration``` manages the Resource Server security and the secured endpoints.
 
 ```AuthorizationServerConfiguration``` manages the Authorization Server and the allowed clients roles and scopes. In addition in this class are defined the allowed grant types.
 
 ```OAuth2SecurityConfiguration``` manages users and roles.
 
-Endpoint to obtain an authorization token is:
+#### Resource Owner Password Credentials
 
-```http://localhost:8080/rest-service-with-oauth/oauth/token```
-
-
-Example of request for the _password_ flow:
+Get the token with:
 
 ```
-POST /rest-service-with-oauth/oauth/token HTTP/1.1
-Host: localhost:8080
-Authorization: Basic Y2xpZW50OmNsaWVudHNlY3JldA==
-Content-Type: application/x-www-form-urlencoded
+$ curl -u "client:clientsecret" \
+-X POST 'http://localhost:8080/rest-service-with-oauth/oauth/token?username=admin&password=adminpsw&grant_type=password&client_id=client'
 
-username=user&password=userpsw&grant_type=password&client_id=client
+----
+Response:
+{
+	"access_token":"0c0fc427-0e8c-4976-b438-ffb22e00546f",
+	"token_type":"bearer",
+	"refresh_token":"69820247-cbc2-4476-b01e-e0591b8cd262",
+	"expires_in":42725,
+	"scope":"read write trust"
+}
+
 ```
-Note: Authorization header is composed by the client credentials encoded using Basic Auth.
+
+and use it to call the _greeting_ endpoint:
+
+```
+$ curl -H "Authorization:Bearer 0c0fc427-0e8c-4976-b438-ffb22e00546f" \
+'http://localhost:8080/rest-service-with-oauth/greeting'
+
+----
+Response:
+{
+	"id":1,
+	"content":"Hello, World!"
+}
+
+```
+
+If you use credentials of user instead of admin's, you receive an error:
+
+```
+$ curl -u "client:clientsecret" \
+-X POST 'http://localhost:8080/rest-service-with-oauth/oauth/token?username=user&password=userpsw&grant_type=password&client_id=client'
+
+----
+Response:
+{
+	"access_token":"0c0fc427-0e8c-4976-b438-ffb22e00546f",
+	"token_type":"bearer",
+	"refresh_token":"69820247-cbc2-4476-b01e-e0591b8cd262",
+	"expires_in":42134,
+	"scope":"read write trust"
+}
+
+```
+```
+$ curl -H "Authorization:Bearer 0c0fc427-0e8c-4976-b438-ffb22e00546f" \
+'http://localhost:8080/rest-service-with-oauth/greeting'
+
+----
+Response:
+{
+	"error":"access_denied",
+	"error_description":"Access is denied"
+}
+```
+This is because in ```ResourceServerConfiguration``` the endpoint ```greeting``` is set to require a role ```admin``` and in ```OAuth2SecurityConfiguration``` that role is assigned only to the user with username ```admin```.
+
+#### authorization_code grant flow
+Trigger the following request from a web browser:
+
+```
+http://localhost:8080/rest-service-with-oauth/oauth/authorize?client_id=client&response_type=code&redirect_uri=http://localhost:8080/rest-service-with-oauth/callback
+```
+
+Follow the stream and login with admin's credentials, once you get the authorization code invoke the following POST using the code:
+
+```
+$ curl -u "client:clientsecret" 
+-X POST "http://localhost:8080/rest-service-with-oauth/oauth/token?grant_type=authorization_code&code=l4So3I&redirect_uri=http://localhost:8080/rest-service-with-oauth/callback"
+
+----
+Response:
+{
+	"access_token":"f78652ca-185e-4a93-ae5c-fd0e786df44f",
+	"token_type":"bearer",
+	"refresh_token":"39afd8ab-d525-4112-9b92-0957977d388c",
+	"expires_in":41171,
+	"scope":"read write trust"
+}
+```
+
+and use it the access token to call the _greeting_ endpoint:
+
+```
+$ curl -H "Authorization:Bearer f78652ca-185e-4a93-ae5c-fd0e786df44f" \
+'http://localhost:8080/rest-service-with-oauth/greeting'
+
+----
+Response:
+{
+	"id":1,
+	"content":"Hello, World!"
+}
+
+```
+
+Note that if you previously login as _user_, you will not be authorized to invoke the endpoint:
+
+```
+$ curl -H "Authorization:Bearer 0c0fc427-0e8c-4976-b438-ffb22e00546f" \
+'http://localhost:8080/rest-service-with-oauth/greeting'
+
+----
+Response:
+{
+	"error":"access_denied",
+	"error_description":"Access is denied"
+}
+
+```
+
+
 
 ### spring.jwt.example
 
