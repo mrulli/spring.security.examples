@@ -28,24 +28,24 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Autowired
 	private UserApprovalHandler userApprovalHandler;
 
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
 	@Value("${client.id:client}")
 	private String clientId;
 	@Value("${client.secret:secret}")
 	private String clientSecret;
 
-	@Autowired
-	private AuthenticationManager authenticationManager;
-
-
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+		// TODO jdbc option : add a link or documentation reference
 		clients.inMemory()
 		.withClient(clientId)
 		.secret(clientSecret)
-		.authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
+		.authorizedGrantTypes("bearer", "password", "authorization_code", "refresh_token", "implicit")
 		.authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
-		.scopes("read", "write", "trust")
-		;
+		.redirectUris("http://localhost:8080/rest-service-with-oauth/decision")
+		.scopes("read", "write", "trust");
 	}
 
 	@Override
@@ -56,7 +56,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-		oauthServer.realm(REALM+"/client");
+		// TODO ??? 
+		oauthServer.realm(REALM + "/client");
 	}
 
 }
