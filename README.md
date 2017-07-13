@@ -1,11 +1,12 @@
-### authorization_code flow in spring boot
+## OAuth with Spring Boot
+### Projects description
 The authorization code flow involve the following projects:
 
 * **spring-client-app**: emulates the client providing a callback to receive the authorization code;* **spring-oauth2**: the authorization server that provides support for OAuth2 flows and generates auth codes along with access tokens;* **spring-oauth2-resource-provider**: provides a trivial resource server that publish a REST API protected with the OAuth filter
 
 Using these three projects it is possible to either test the Resource Owner Password Credentials (grant type "password") or the more complex authorization_code grant flow.
 
-#### Resource Owner Password Credentials
+#### Resource Owner Password Credentials Flow
 Get the token with:
 
 ```
@@ -27,7 +28,7 @@ Response:
 }
 ```
 
-#### authorization_code grant flow
+#### `authorization_code` Grant Flow
 Trigger the following request from a web browser:
 
 ```
@@ -51,6 +52,9 @@ Response:
 }
 ```
 
+## OAuth with Spring MVC
+This project contains an implementation of the OAuth authorization server on top of Spring MVC. It provides the same features of the SpringBoot-based projects above all packaged in a single Spring MVC war file. Also the client callback REST API is packaged in the same project for convenience.
+
 ### rest-service-with-oauth
 This project should be run under a Tomcat server and exposes a secured REST endpoint on ```http://localhost:8080/rest-service-with-oauth/greeting```.
 
@@ -68,7 +72,7 @@ Client and users could be managed in the configuration files: ```client.properti
 
 ```OAuth2SecurityConfiguration``` manages users and roles.
 
-#### Resource Owner Password Credentials
+#### Resource Owner Password Credentials Flow
 
 Get the token with:
 
@@ -133,7 +137,7 @@ Response:
 ```
 This is because in ```ResourceServerConfiguration``` the endpoint ```greeting``` is set to require a role ```admin``` and in ```OAuth2SecurityConfiguration``` that role is assigned only to the user with username ```admin```.
 
-#### authorization_code grant flow
+#### `authorization_code` Grant Flow
 Trigger the following request from a web browser:
 
 ```
@@ -187,7 +191,7 @@ Response:
 
 ```
 
-
+## JWT and Spring
 
 ### spring.jwt.example
 
