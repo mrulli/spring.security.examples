@@ -31,11 +31,10 @@ Response:
 #### `authorization_code` Grant Flow
 Trigger the following request from a web browser:
 
-```
-http://localhost:9000/hascode/oauth/authorize?client_id=foo&response_type=code&redirect_uri=http%3A//localhost%3A8080/client-app/callback&state=123456
-```
 
-Follow the stream and once you get the authorization code invoke the following POST
+http://localhost:9000/hascode/oauth/authorize?client_id=foo&response_type=code&redirect_uri=http%3A//localhost%3A8080/client-app/callback&state=123456
+
+Follow the stream, login with **bar/barsecret** user credentials and once you get the authorization code invoke the following POST
 
 ```
 $ curl -u "foo:foosecret" \
@@ -56,7 +55,9 @@ Response:
 This project contains an implementation of the OAuth authorization server on top of Spring MVC. It provides the same features of the SpringBoot-based projects above all packaged in a single Spring MVC war file. Also the client callback REST API is packaged in the same project for convenience.
 
 ### rest-service-with-oauth
-This project should be run under a Tomcat server and exposes a secured REST endpoint on ```http://localhost:8080/rest-service-with-oauth/greeting```.
+This project should be run under a Tomcat server and exposes a secured REST endpoint on 
+
+http://localhost:8080/rest-service-with-oauth/greeting
 
 Client and users could be managed in the configuration files: ```client.properties``` and ```user.properties``` respectively. 
 
@@ -140,11 +141,9 @@ This is because in ```ResourceServerConfiguration``` the endpoint ```greeting```
 #### `authorization_code` Grant Flow
 Trigger the following request from a web browser:
 
-```
 http://localhost:8080/rest-service-with-oauth/oauth/authorize?client_id=client&response_type=code&redirect_uri=http://localhost:8080/rest-service-with-oauth/callback
-```
 
-Follow the stream and login with admin's credentials, once you get the authorization code invoke the following POST using the code:
+Follow the stream and login with admin's credentials (**admin/adminpsw**), once you get the authorization code invoke the following POST using the code:
 
 ```
 $ curl -u "client:clientsecret" \
