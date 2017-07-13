@@ -4,6 +4,10 @@ import javax.servlet.Filter;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+/**
+ * Application initializer to assign configuration and CORS filter to the application.
+ * See http://www.kubrynski.com/2014/01/understanding-spring-web-initialization.html
+ */
 public class HelloWorldInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
  
     @Override

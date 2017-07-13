@@ -10,6 +10,13 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Implements a simple CORS filter for incoming requests.
+ * CORS capability works by adding some specific HTTP headers that tell the browser that downloaded webpage
+ * should be allowed to make web requests to given/all domains. Also, you can add information to instruct
+ * browser to allow only certain HTTP methods (GET/PUT/POST/DELETE etc) on those domain URLs.
+ * See http://howtodoinjava.com/servlets/java-cors-filter-example/
+ */
 
 public class CORSFilter implements Filter {
 

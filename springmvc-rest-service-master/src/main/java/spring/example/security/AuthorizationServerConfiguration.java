@@ -14,6 +14,15 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
+/**
+ * Authorization server is the one responsible for verifying credentials and if credentials are OK, providing the tokens. 
+ * It also contains information about registered clients and possible access scopes and grant types. 
+ * The token store is used to store the token (in memory or on a database as well).
+ * The @EnableAuthorizationServer annotation is used to configure the OAuth 2.0 Authorization Server mechanism.
+ * See https://projects.spring.io/spring-security-oauth/docs/oauth2.html#authorization-server-configuration
+ * Example here: http://websystique.com/spring-security/secure-spring-rest-api-using-oauth2/ 
+ */
+
 @Configuration
 @EnableAuthorizationServer 
 @ComponentScan(basePackages = { "spring.example.*" })
@@ -38,7 +47,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		// TODO jdbc option : add a link or documentation reference
+		// Example of JDBC client storage: https://goo.gl/W6qTzP
 		clients.inMemory()
 		.withClient(clientId)
 		.secret(clientSecret)

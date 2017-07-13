@@ -18,6 +18,17 @@ import org.springframework.security.oauth2.provider.request.DefaultOAuth2Request
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
+/**
+ * The @EnableWebSecurity annotation and WebSecurityConfigurerAdapter work together to provide web based security. 
+ * By extending WebSecurityConfigurerAdapter we are able to do the following:
+ * - Require the user to be authenticated prior to accessing any URL within our application
+ * - Assign users and roles
+ * - Enable HTTP Basic and Form based authentication
+ * - Automatically create a login and a logout pages
+ * See https://spring.io/blog/2013/07/03/spring-security-java-config-preview-web-security#websecurityconfigureradapter
+ * Example here: http://websystique.com/spring-security/secure-spring-rest-api-using-oauth2/
+ */
+
 @Configuration
 @EnableWebSecurity
 @ComponentScan(basePackages = { "spring.example.*" })
@@ -41,7 +52,9 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
     public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
+		// Example of JDBC authentication: https://goo.gl/NB9zgA
         auth.inMemoryAuthentication()
+        // Define user's roles
         .withUser(adminId).password(adminPassword).roles(ADMIN_ROLE).and()
         .withUser(userId).password(userPassword).roles(USER_ROLE);
     }

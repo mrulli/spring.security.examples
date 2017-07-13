@@ -5,6 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Simple REST endpoint to be used as callback URI in authorization code authentication flow.
+ */
 @RestController
 public class CallbackController {
 	@RequestMapping("/callback")

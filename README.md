@@ -143,7 +143,7 @@ http://localhost:8080/rest-service-with-oauth/oauth/authorize?client_id=client&r
 Follow the stream and login with admin's credentials, once you get the authorization code invoke the following POST using the code:
 
 ```
-$ curl -u "client:clientsecret" 
+$ curl -u "client:clientsecret" \
 -X POST "http://localhost:8080/rest-service-with-oauth/oauth/token?grant_type=authorization_code&code=l4So3I&redirect_uri=http://localhost:8080/rest-service-with-oauth/callback"
 
 ----
