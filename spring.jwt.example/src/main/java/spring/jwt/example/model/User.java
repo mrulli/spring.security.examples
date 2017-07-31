@@ -1,5 +1,9 @@
 package spring.jwt.example.model;
 
+/**
+ * Simple User model for the REST endpoint
+ */
+
 public class User {
 	private String firstName;
 	private String lastName;

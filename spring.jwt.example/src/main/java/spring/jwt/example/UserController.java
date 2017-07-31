@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import spring.jwt.example.model.User;
 
+/**
+ * Simple REST endpoint to be secured
+ */
+
 @RestController
 public class UserController {
 

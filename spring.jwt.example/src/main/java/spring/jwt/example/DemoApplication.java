@@ -6,6 +6,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Simple class to run the application with SpringBoot.
+ * Simply run this class as a Java application.
+ */
+
 @SpringBootApplication
 @RestController
 @EnableAutoConfiguration

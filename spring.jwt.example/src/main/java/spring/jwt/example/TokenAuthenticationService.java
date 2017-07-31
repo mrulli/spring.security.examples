@@ -1,16 +1,24 @@
 package spring.jwt.example;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import static java.util.Collections.emptyList;
+
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security
             .authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
-import static java.util.Collections.emptyList;
+/**
+ * The JWT service deal with the creation and verification of our tokens. 
+ * We create a token based on a username and an expiration time, and then sign it with a secret (using an HMAC). 
+ * This class is defined in the tutorial: https://auth0.com/blog/securing-spring-boot-with-jwts/
+ */
 
 class TokenAuthenticationService {
   static final long EXPIRATIONTIME = 864_000_000; // 10 days

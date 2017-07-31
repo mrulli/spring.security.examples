@@ -1,5 +1,9 @@
 package spring.jwt.example;
 
+/**
+ * Simple class that contains credentials data
+ */
+
 public class AccountCredentials {
 
 	private String username;

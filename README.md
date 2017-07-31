@@ -19,6 +19,7 @@ $ curl -XPOST -k foo:foosecret@localhost:9000/hascode/oauth/token  \
 
 ----
 Response:
+
 {
     "access_token":"2519f2bf-18a9-4b31-8480-13459c2adc80",
     "token_type":"bearer",
@@ -42,6 +43,7 @@ $ curl -u "foo:foosecret" \
 
 ----
 Response:
+
 {
     "access_token":"2519f2bf-18a9-4b31-8480-13459c2adc80",
     "token_type":"bearer",
@@ -59,19 +61,19 @@ This project should be run under a Tomcat server and exposes a secured REST endp
 
 http://localhost:8080/rest-service-with-oauth/greeting
 
-Client and users could be managed in the configuration files: ```client.properties``` and ```user.properties``` respectively. 
+Client and users could be managed in the configuration files: `client.properties` and `user.properties` respectively. 
 
-```OAuthTest``` launches a series of unit tests to verify the OAuth flow. It could be run as a JUnit Test.
+`OAuthTest` launches a series of unit tests to verify the OAuth flow. It could be run as a JUnit Test.
 
-```GreetingController``` is the secured REST service.
+`GreetingController` is the secured REST service.
 
-```CallbackController``` exposes a webservice used as callback in _authorization___code flow_ in order to retrieve the authorization code required to obtain the token.
+`CallbackController` exposes a webservice used as callback in _authorization___code flow_ in order to retrieve the authorization code required to obtain the token.
 
-```ResourceServerConfiguration``` manages the Resource Server security and the secured endpoints.
+`ResourceServerConfiguration` manages the Resource Server security and the secured endpoints.
 
-```AuthorizationServerConfiguration``` manages the Authorization Server and the allowed clients roles and scopes. In addition in this class are defined the allowed grant types.
+`AuthorizationServerConfiguration` manages the Authorization Server and the allowed clients roles and scopes. In addition in this class are defined the allowed grant types.
 
-```OAuth2SecurityConfiguration``` manages users and roles.
+`OAuth2SecurityConfiguration` manages users and roles.
 
 #### Resource Owner Password Credentials Flow
 
@@ -83,6 +85,7 @@ $ curl -u "client:clientsecret" \
 
 ----
 Response:
+
 {
 	"access_token":"0c0fc427-0e8c-4976-b438-ffb22e00546f",
 	"token_type":"bearer",
@@ -101,6 +104,7 @@ $ curl -H "Authorization:Bearer 0c0fc427-0e8c-4976-b438-ffb22e00546f" \
 
 ----
 Response:
+
 {
 	"id":1,
 	"content":"Hello, World!"
@@ -116,6 +120,7 @@ $ curl -u "client:clientsecret" \
 
 ----
 Response:
+
 {
 	"access_token":"0c0fc427-0e8c-4976-b438-ffb22e00546f",
 	"token_type":"bearer",
@@ -131,12 +136,13 @@ $ curl -H "Authorization:Bearer 0c0fc427-0e8c-4976-b438-ffb22e00546f" \
 
 ----
 Response:
+
 {
 	"error":"access_denied",
 	"error_description":"Access is denied"
 }
 ```
-This is because in ```ResourceServerConfiguration``` the endpoint ```greeting``` is set to require a role ```admin``` and in ```OAuth2SecurityConfiguration``` that role is assigned only to the user with username ```admin```.
+This is because in `ResourceServerConfiguration` the endpoint `greeting` is set to require a role `admin` and in `OAuth2SecurityConfiguration` that role is assigned only to the user with username `admin`.
 
 #### `authorization_code` Grant Flow
 Trigger the following request from a web browser:
@@ -151,6 +157,7 @@ $ curl -u "client:clientsecret" \
 
 ----
 Response:
+
 {
 	"access_token":"f78652ca-185e-4a93-ae5c-fd0e786df44f",
 	"token_type":"bearer",
@@ -168,6 +175,7 @@ $ curl -H "Authorization:Bearer f78652ca-185e-4a93-ae5c-fd0e786df44f" \
 
 ----
 Response:
+
 {
 	"id":1,
 	"content":"Hello, World!"
@@ -183,6 +191,7 @@ $ curl -H "Authorization:Bearer 0c0fc427-0e8c-4976-b438-ffb22e00546f" \
 
 ----
 Response:
+
 {
 	"error":"access_denied",
 	"error_description":"Access is denied"
@@ -194,38 +203,62 @@ Response:
 
 ### spring.jwt.example
 
-This project exposes a secured REST endpoint on ```http://localhost:8080/users```.
+This project exposes a secured REST endpoint on `http://localhost:8080/users`.
 
-It could be launched using Spring Boot, simply run the class ```DemoApplication``` as Java application.
+Inspired by [this tutorial](https://auth0.com/blog/securing-spring-boot-with-jwts/).
 
-```OAuthFlowTest``` contains a simple authentication test.
+####Content:
 
-Authentication is done calling the endpoint:
+`OAuthFlowTest` contains a simple authentication test.
 
-```http://localhost:8080/login```
+`UserController` is the secured REST endpoint.
 
-Example of request:
+`TokenAuthenticationService` manages the token generation and authentication.
 
-```
-POST /login HTTP/1.1
-Host: localhost:8080
-Content-Type: application/json
+`WebSecurityConfig` manages login endpoint. Permitted users are defined here.
 
-{
-"username":"admin",
-"password":"password"
-}
-```
+####Usage:
 
-```UserController``` is the secured REST endpoint.
+1. Launch it using Spring Boot, simply run the class `DemoApplication` as Java application.
+2. Get a token with:
 
-```AuthorizationServerConfiguration``` manages the Authorization Server and the allowed clients roles and scopes. In addition in this class are defined the allowed grant types.
+	```
+	$ curl -i -X POST \
+	  http://localhost:8080/login \
+	  -H 'content-type: application/json' \
+	  -d '{
+	"username":"admin",
+	"password":"password"
+	}'
+	
+	----
+	Response:
+	
+	HTTP/1.1 200 
+	X-Content-Type-Options: nosniff
+	X-XSS-Protection: 1; mode=block
+	Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+	Pragma: no-cache
+	Expires: 0
+	X-Frame-Options: DENY
+	Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTUwMjM2Njc2NX0.iDDSSgrc3ZGcBB9Z-JCT5wM8pasR5KBWrtaZm9Kuk6uf729w0SBqljYWaRWyHsSfC0zv2JcBg3WiZFGQyQbFRg
+	Content-Length: 0
+	Date: Mon, 31 Jul 2017 12:06:05 GMT
+	
+	```
 
-```ResourceServerConfiguration``` manages the Resource Server security and the secured endpoints.
+3. Call the `http://localhost:8080/users` using the token:
 
-```TokenAuthenticationService``` manages the token generation and authentication.
-
-```WebSecurityConfig``` manages login endpoint.
+	```
+	curl -X GET \
+	  http://localhost:8080/users \
+	  -H 'authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTUwMjM2Njc2NX0.iDDSSgrc3ZGcBB9Z-JCT5wM8pasR5KBWrtaZm9Kuk6uf729w0SBqljYWaRWyHsSfC0zv2JcBg3WiZFGQyQbFRg'
+	
+	----
+	Response:
+	
+	[{"firstName":"John","lastName":"Deer"},{"firstName":"David","lastName":"Collins"}]
+	```
 
 
 
