@@ -207,7 +207,7 @@ This project exposes a secured REST endpoint on `http://localhost:8080/users`.
 
 Inspired by [this tutorial](https://auth0.com/blog/securing-spring-boot-with-jwts/).
 
-####Content:
+#### Content:
 
 `OAuthFlowTest` contains a simple authentication test.
 
@@ -217,7 +217,7 @@ Inspired by [this tutorial](https://auth0.com/blog/securing-spring-boot-with-jwt
 
 `WebSecurityConfig` manages login endpoint. Permitted users are defined here.
 
-####Usage:
+#### Usage:
 
 1. Launch it using Spring Boot, simply run the class `DemoApplication` as Java application.
 2. Get a token with:
@@ -268,3 +268,4 @@ Inspired by [this tutorial](https://auth0.com/blog/securing-spring-boot-with-jwt
 
 
 
+ 
