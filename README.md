@@ -1,3 +1,23 @@
+# What you can find here
+
+#### **simple-security-demo** 
+Contains examples on how to manage authorization with
+
+* ROLE-based authentication
+* Custom PermissionEvaluator
+* Spring Expression Language
+
+#### OAuth with Spring Boot
+* **spring-client-app**
+* **spring-oauth2**
+* **spring-oauth2-resource-provider**
+
+#### OAuth with Spring MVC
+* **rest-service-with-oauth**
+
+#### JWT and Spring
+* **spring.jwt.example**
+
 ## OAuth with Spring Boot
 ### Projects description
 The authorization code flow involve the following projects:
